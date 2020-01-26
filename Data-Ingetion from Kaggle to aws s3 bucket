@@ -1,0 +1,29 @@
+/usr/local/bin/pip3.6 install --user kaggle
+/usr/local/bin/pip3.6 install kaggle
+~/.local/bin/kaggle datasets download -d yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018 --path /home/hadoop/Raw_09to16 --unzip
+
+~/.local/bin/kaggle datasets download -d usdot/flight-delays --path /home/hadoop/Airport_airline --unzip
+
+
+sudo mkdir RDS
+sudo cp Raw_09to16/2017.csv RDS/
+sudo mkdir INC
+sudo cp Raw_09to16/2018.csv INC/
+sudo rm Raw_09to16/2017.csv
+sudo rm Raw_09to16/2018.csv
+sudo mkdir Airlines
+sudo mkdir Airports
+sudo cp Airport_airline/airports.csv  Airports/
+sudo cp Airport_airline/airlines.csv  Airlines/
+
+sudo mkdir GROUP6_RawHub
+
+sudo cp -a Airlines GROUP6_RawHub/
+sudo cp -a Airports GROUP6_RawHub/
+sudo cp -a RDS GROUP6_RawHub/
+sudo cp -a INC GROUP6_RawHub/
+sudo cp -a Raw_09to16 GROUP6_RawHub/
+
+hadoop fs -put /home/hadoop/GROUP6_RawHub
+
+s3-dist-cp --src /user/hadoop/GROUP6_RawHub --dest s3://hive-vita/Raw_zone/GROUP6_RawHub/
